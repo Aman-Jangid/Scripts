@@ -1,0 +1,17 @@
+export const orgs = [
+  "KDE",
+  "openstreetmap",
+  "LibreOffice",
+  "linuxfoundation",
+  "apache",
+  "mozilla",
+  "honeynet",
+  "BRL-CAD",
+  "eclipse",
+  "PSF",
+  "openmf",
+  "GNOME",
+  "RTEMS",
+  "blender",
+  "inkscape",
+];
