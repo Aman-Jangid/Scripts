@@ -1,0 +1,3 @@
+[submodule "findOpenIssues"]
+	path = findOpenIssues
+	url = ./findOpenIssues
