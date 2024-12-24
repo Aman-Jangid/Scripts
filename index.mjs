@@ -40,6 +40,7 @@ const octokit = new MyOctokit({
 const filterRepoData = (repo) => {
   const {
     name,
+    full_name: organization,
     html_url,
     languages_url,
     pushed_at,
@@ -54,6 +55,7 @@ const filterRepoData = (repo) => {
 
   return {
     name,
+    organization,
     html_url,
     languages_url,
     pushed_at,
@@ -91,6 +93,10 @@ const getReposWithIssues = async (org) => {
 
 // create table for each organization and write to file
 const createFiles = (org, repos) => {
+  if (repos.length === 0) {
+    return;
+  }
+
   const jsonContent = JSON.stringify([`Organization: ${org}`, repos], null, 2);
   const csvContent = parse(repos);
 
