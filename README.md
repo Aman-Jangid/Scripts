@@ -1,6 +1,21 @@
-## Find repos with open issue based on parameters.
+# Find Repositories with Open Issues Based on Parameters
 
-### Usage :
+## Usage
 
-Install dependencies : npm install or yarn add
-Execute Script : node index.mjs
+1. **Install Dependencies**  
+   Run the following command to install required dependencies:
+
+   ```bash
+   npm install
+   ```
+
+   Or
+
+   ```bash
+   yarn add
+   ```
+
+2. **Execute the script**
+   ```bash
+   node index.mjs
+   ```
