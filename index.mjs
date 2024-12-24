@@ -109,10 +109,14 @@ const createFiles = (org, repos) => {
   try {
     fs.writeFileSync("output.json", "[\n"); // Initialize JSON array
     fs.writeFileSync("output.csv", ""); // Clear CSV file
-    for (const org of orgs) {
+    for (let i = 0; i < orgs.length; i++) {
+      const org = orgs[i];
       const repos = await getReposWithIssues(org);
       const filteredRepos = repos.map((repo) => filterRepoData(repo));
       createFiles(org, filteredRepos);
+      console.clear();
+      console.log(`Processing ${i + 1}/${orgs.length}`);
+      if (i === orgs.length) console.log(`Done!`);
     }
     fs.appendFileSync("output.json", "]\n"); // Close JSON array
   } catch (error) {
