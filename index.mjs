@@ -1,11 +1,39 @@
 import { Octokit } from "octokit";
+import { throttling } from "@octokit/plugin-throttling";
 import fs from "fs";
 import { orgs } from "./orgs.mjs"; // Import organization names
 import { parse } from "json2csv"; // Import json2csv for CSV conversion
 
-const octokit = new Octokit({
+const MyOctokit = Octokit.plugin(throttling);
+
+const octokit = new MyOctokit({
   auth: process.env.GITHUB_TOKEN,
   userAgent: "Aman-Jangid",
+  throttle: {
+    onRateLimit: (retryAfter, options) => {
+      console.warn(
+        `Request quota exhausted for request ${options.method} ${options.url}`
+      );
+      if (options.request.retryCount === 0) {
+        console.log(`Retrying after ${retryAfter} seconds!`);
+        return true;
+      }
+    },
+    onSecondaryRateLimit: (retryAfter, options) => {
+      console.warn(
+        `Request quota exhausted for request ${options.method} ${options.url}`
+      );
+      if (options.request.retryCount === 0) {
+        console.log(`Retrying after ${retryAfter} seconds!`);
+        return true;
+      }
+    },
+    onAbuseLimit: (retryAfter, options) => {
+      console.warn(
+        `Abuse detected for request ${options.method} ${options.url}`
+      );
+    },
+  },
 });
 
 // filter the data for each repo
@@ -51,6 +79,7 @@ const getRepos = async (org) => {
     console.log(
       `Error! Status: ${error.status}. Message: ${error.response.data.message}`
     );
+    return [];
   }
 };
 
@@ -71,11 +100,16 @@ const createFiles = (org, repos) => {
 
 // entry point
 (async () => {
-  fs.writeFileSync("output.json", "[\n"); // Initialize JSON array
-  for (const org of orgs) {
-    const repos = await getReposWithIssues(org);
-    const filteredRepos = repos.map((repo) => filterRepoData(repo));
-    createFiles(org, filteredRepos);
+  try {
+    fs.writeFileSync("output.json", "[\n"); // Initialize JSON array
+    fs.writeFileSync("output.csv", ""); // Clear CSV file
+    for (const org of orgs) {
+      const repos = await getReposWithIssues(org);
+      const filteredRepos = repos.map((repo) => filterRepoData(repo));
+      createFiles(org, filteredRepos);
+    }
+    fs.appendFileSync("output.json", "]\n"); // Close JSON array
+  } catch (error) {
+    console.error("An error occurred during execution:", error);
   }
-  fs.appendFileSync("output.json", "]\n"); // Close JSON array
 })();
