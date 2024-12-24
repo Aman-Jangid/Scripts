@@ -1,0 +1,11 @@
+{
+  "name": "findopenissues",
+  "version": "1.0.0",
+  "description": "find repositories with open issues based on specific parameters.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
